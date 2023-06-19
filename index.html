@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Upload and Display</title>
+    <style>
+        img.preview {
+            max-width: 200px;
+            max-height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Upload and Display</h1>
+
+    <h2>Upload Image</h2>
+    <form action="upload.php" method="post" enctype="multipart/form-data">
+        <input type="file" name="image" id="image" onchange="previewImage(event)" accept="image/*">
+        <br>
+        <img id="preview" class="preview" src="#" alt="Preview">
+        <br>
+        <input type="submit" value="Upload">
+    </form>
+
+    <h2>Uploaded Images</h2>
+    
+    <?php
+        $imageFiles = glob('uploads/*.{jpg,jpeg,png,gif}', GLOB_BRACE);
+        foreach ($imageFiles as $imageFile) {
+            echo '<img class="preview" src="' . $imageFile . '" alt="Uploaded Image">';
+            echo '<a href="view.php?image=' . urlencode($imageFile) . '">View</a>';
+            echo '<br>';
+        }
+    ?>
+
+    <script>
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var preview = document.getElementById('preview');
+                preview.src = reader.result;
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+</body>
+</html>
